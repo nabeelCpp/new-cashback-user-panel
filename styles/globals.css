@@ -1,0 +1,187 @@
+html,
+body {
+  min-height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+code {
+  font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
+  padding: 0.1rem 0.4rem;
+  font-size: 90%;
+  color: #d400ff;
+  border-radius: 0.1335rem;
+}
+code:not([class*='language-']):before,
+code:not([class*='language-']):after {
+  content: '`';
+}
+code[class*='language-'] {
+  padding: 0;
+}
+
+.react-hot-toast {
+  z-index: 999999999999999999 !important;
+}
+
+.MuiTextField-root input[type='time']::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+
+}
+::-webkit-scrollbar:horizontal {
+  width: 2px;
+    height: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+
+}
+::-webkit-scrollbar-thumb:horizontal {
+  background: #888;
+  width: 5px;
+  height: 2px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.logo-img{
+  display: flex;
+  width: 100% ;
+  padding: 0px 10px;
+}
+
+
+.nav-header{
+  display: flex;
+  align-items: flex-start !important;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+
+.reffer-div{
+  margin-bottom: 30px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px 0px rgba(20, 21, 33,  0.18);
+
+}
+
+
+
+
+/* Tree View */
+
+
+
+
+ul, #myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+ 
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.nested {
+  display: block;
+  padding-left: 0 !important;
+}
+
+.active {
+  display: block;
+}
+.nested{
+  border-left: 1px dashed;
+}
+
+.nested li{
+  display: flex;
+  align-items: center;
+  margin: 50px 0;
+  cursor: pointer;
+}
+
+.nested li:first-child{
+  margin-top: 0 !important;
+}
+
+.treeCard{
+  display: none;
+}
+.nested li:hover .treeCard{
+  display: block;
+}
+
+#myUL .caret:hover .treeCard{
+  display: block;
+}
+
+
+
+.nested li::before{
+  content: "";
+  width: 30px;
+  border-top: 1px dashed;
+  display: block;
+transition: 1s;
+}
+
+
+
+#myUL:hover .nested li::before{
+  width: 80px;
+  transition: 1s;
+}
+
+.avtarimg{
+  border-radius: 8px;
+  margin-right: 5px;
+
+}
+.cloudbg{
+  background-image: url(../public/images/cloud-login.jpg);
+  background-position: center;
+  background-clip: border-box;
+}
+
+
