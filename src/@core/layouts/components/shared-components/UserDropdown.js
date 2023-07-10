@@ -92,12 +92,6 @@ const UserDropdown = (props) => {
           {auth.user.username}
           <br /> {auth.user.co_founder == 1 && "Co-Founder"}
         </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: "0.8rem", color: "text.disabled" }}
-        >
-          Admin{" "}
-        </Typography>
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -140,12 +134,6 @@ const UserDropdown = (props) => {
               }}
             >
               <Typography sx={{ fontWeight: 600 }}>{auth.user.name}</Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: "0.8rem", color: "text.disabled" }}
-              >
-                Admin
-              </Typography>
             </Box>
           </Box>
         </Box>

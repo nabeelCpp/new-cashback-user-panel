@@ -12,10 +12,9 @@ import {
   Typography,
   CardContent,
   Avatar,
-  LinearProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { linearProgressClasses } from "@mui/material/LinearProgress";
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
 //----------
 //  Other Libraries Imports
@@ -187,7 +186,7 @@ const Dashboard = () => {
                   <BorderLinearProgress
                     sx={{ height: 30 }}
                     variant="determinate"
-                    value={data.monthlyTargetMeterPercentage?.toFixed(2)}
+                    value={data.monthlyTargetMeterPercentage>100?100:data.monthlyTargetMeterPercentage?.toFixed(2)}
                   />
                 </Typography>
               </div>
@@ -250,7 +249,7 @@ const Dashboard = () => {
                   <BorderLinearProgress
                     sx={{ height: 30 }}
                     variant="determinate"
-                    value={data.annualTargetMeterPercentage?.toFixed(2)}
+                    value={data.annualTargetMeterPercentage>100?100:data.annualTargetMeterPercentage?.toFixed(2)}
                   />
                 </Typography>
               </div>

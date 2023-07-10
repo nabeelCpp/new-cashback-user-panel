@@ -76,7 +76,7 @@ const TransactionHistory = () => {
   const columns = [
     {
       title: "Sr. No",
-      render: (_, index) =>
+      render: (_, object, index) =>
         index + 1 + (pagination.current - 1) * pagination.pageSize,
     },
     {
