@@ -1,7 +1,7 @@
 //----------
 //  React Imports
 //----------
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 
 //----------
 //  MUI imports
@@ -23,6 +23,7 @@ import {
   MenuItem,
   Link,
   Divider,
+  Modal 
 } from "@mui/material";
 
 //----------
@@ -85,9 +86,14 @@ const LoginPage = () => {
   const [packages, setPackages] = useState([]);
   const [countries, setCountries] = useState([]);
   const [submitButton, setSubmitButton] = useState(false);
-  const [open, setOpen] = useState(false);
   const [readOnlySponsor, setReadOnlySponsor] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(null)
+  const [viewModal, setViewModal] = useState(false);
+
+   //----------
+  //  Refs
+  //----------
+  const descriptionElementRef = useRef(null);
   //----------
   //  Hooks
   //----------
@@ -136,6 +142,20 @@ const LoginPage = () => {
     };
     loadCountries();
   }, []);
+
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const style = {
+    position: 'absolute' ,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: '800px',
+    width:'100%',
+    p: 4,
+  };
 
   //----------
   //  Handlers
@@ -431,7 +451,7 @@ const LoginPage = () => {
 
               <Grid item xs={12} sx={{ display: "flex", alignItems: "center" }}>
                 <Checkbox onChange={termsHandler} />
-                <Typography>I have read & accept Terms & Conditions</Typography>
+                <Typography>I have read & accept  <Link sx={{cursor:'pointer'}} onClick={handleOpen}>Terms & Conditions</Link> </Typography>
               </Grid>
 
               <Grid
@@ -456,14 +476,34 @@ const LoginPage = () => {
               </Grid>
             </Grid>
           </form>
-          <Link href="/login" variant="body2">
-            Login
+          <Link href="/dashboard" variant="body2">
+            Back
           </Link>
         </Box>
       </Card>
-      <Backdrop sx={{ color: "#fff", zIndex: 1000000 }} open={open}>
+      {/* <Backdrop sx={{ color: "#fff", zIndex: 1000000 }} open={open}>
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </Backdrop> */}
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Card sx={style}>
+
+          <Typography id="modal-modal-title" variant="h5" component="h2">
+          Terms & Conditions
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+          <Button sx={{float:'right'}} onClick={handleClose}>close</Button>
+        </Card>
+      </Modal>
+
+
     </Box>
   );
 };

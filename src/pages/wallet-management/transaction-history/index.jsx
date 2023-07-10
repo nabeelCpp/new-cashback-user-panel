@@ -6,8 +6,19 @@ import { useEffect, useState } from "react";
 //----------
 //  Mui imports
 //----------
-import { Grid, Box, Typography, Card, CardContent } from "@mui/material";
-
+import {
+  Grid,
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 //----------
 //  Other Libraries
 //----------
@@ -25,13 +36,14 @@ const TransactionHistory = () => {
   //  States
   //----------
   const [data, setData] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
   const [amount, setAmount] = useState(0);
   const [searchedText, setSearchedText] = useState("");
   const [pagination, setPagination] = useState({
     pageSize: 10, // Initial page size
     current: 1, // Initial current page
   });
-
+  const [filterDateRange, setFilterDateRange] = useState([null, null]);
   //----------
   //  Hooks
   //----------
@@ -53,6 +65,7 @@ const TransactionHistory = () => {
         )
         .then((response) => {
           setData(response.data.transactions);
+          setDataSource(response.data.transactions);
           setAmount(response.data.amount);
         })
         .catch((error) => {
@@ -73,6 +86,28 @@ const TransactionHistory = () => {
   // Constants
   //----------
   const sorter = ["ascend", "descend"];
+
+  //----------
+  //  Table Actions - Apply Filter
+  //----------
+  const applyFilter = () => {
+    let dateFrom = filterDateRange[0]["$d"].toLocaleDateString();
+    let dateTo = filterDateRange[1]["$d"].toLocaleDateString();
+    // let filter = dataSource.filter(d => (( filterUserId && d.user_id == filterUserId ) || ( filterUserName && d.username == filterUserName) || (new Date(d.registration_date) >= new Date(dateFrom) && new Date(d.registration_date) <= new Date(dateTo) )))
+    let filter = dataSource.filter( (d) => new Date(d.ts) >= new Date(dateFrom) && new Date(d.ts) <= new Date(dateTo));
+    setData(filter);
+  };
+
+  //----------
+  //  Table Actions - Reset  Filter
+  //----------
+  const resetFilter = () => {
+    if (filterDateRange) {
+      setFilterDateRange([null, null]);
+    }
+    setData(dataSource);
+  };
+
   const columns = [
     {
       title: "Sr. No",
@@ -192,16 +227,45 @@ const TransactionHistory = () => {
           </Typography>
         </Box>
       </Grid>
-
+      
       <Card component="div" sx={{ position: "relative", mb: 7 }}>
         <CardContent sx={{ overflow: "auto" }}>
-          <Input.Search
+          <Grid container sx={{ display: "flex",alignItems:'center',mb:3}}>
+          <Grid id="datepicker-list" item md={3} xs={12} sx={{ display: "flex",pr:2 }}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ mb: 2 }}>
+          <DateRangePicker
+            calendars={2}
+            value={filterDateRange}
+            onChange={(newValue) => setFilterDateRange(newValue)}
+          />
+        </LocalizationProvider>
+      </Grid>
+      <Grid item md={2} xs={12} sx={{ display: "flex", alignItems: "center" }}>
+        <Button
+          variant="contained"
+          sx={{ mr: 1 }}
+          onClick={applyFilter}
+          disabled={!filterDateRange[0] || !filterDateRange[1] ? true : false}
+          size="small"
+        >
+          <FilterAltIcon />
+        </Button>
+
+        <Button
+          variant="contained"
+          onClick={resetFilter}
+          color="error"
+          size="small"
+        >
+          <FilterAltOffIcon />
+        </Button>
+      </Grid>
+<Grid md={7} xs={12}>
+  <Input.Search
             placeholder="Search here....."
             style={{
               maxWidth: 300,
-              marginBottom: 8,
               display: "block",
-              height: 50,
               float: "right",
               border: "black",
             }}
@@ -212,6 +276,10 @@ const TransactionHistory = () => {
               setSearchedText(e.target.value);
             }}
           />
+</Grid>
+      
+          </Grid>
+          
           <Table
             columns={columns}
             dataSource={data}
