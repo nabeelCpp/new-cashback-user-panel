@@ -223,6 +223,19 @@ const TicketResponse = () => {
       width: 250,
       sorter: (a, b) => a.response.localeCompare(b.response),
     },
+    {
+      title: "Action",
+      dataIndex: "ticket_no",
+      key: "ticket_no",
+      width: 80,
+      render: (value) => (
+        <>
+          <Link href="javascript:void(0)" onClick={() => viewTicket(value)}>
+            View
+          </Link>
+        </>
+      ),
+    }
   ];
   const sorter = ["ascend", "descend"];
   return (

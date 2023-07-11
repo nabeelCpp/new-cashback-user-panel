@@ -89,6 +89,7 @@ const LoginPage = () => {
   const [readOnlySponsor, setReadOnlySponsor] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(null)
   const [viewModal, setViewModal] = useState(false);
+  const [termsConditions, setTermsConditions] = useState(null);
 
    //----------
   //  Refs
@@ -116,6 +117,21 @@ const LoginPage = () => {
         .get(`${process.env.NEXT_PUBLIC_API_URL}/packages`)
         .then((response) => {
           setPackages(response.data);
+        })
+        .catch((error) => {
+          toast.error(
+            `${error.response ? error.response.status : ""}: ${
+              error.response ? error.response.data.message : error
+            }`
+          );
+        });
+
+
+        // Axios for getting terms & conditions data.
+        axios
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/terms-and-conditions`)
+        .then((response) => {
+          setTermsConditions(response.data?.description);
         })
         .catch((error) => {
           toast.error(
@@ -497,7 +513,7 @@ const LoginPage = () => {
           Terms & Conditions
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            {termsConditions}
           </Typography>
           <Button sx={{float:'right'}} onClick={handleClose}>close</Button>
         </Card>
