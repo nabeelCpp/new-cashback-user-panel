@@ -33,6 +33,7 @@ import BlankLayout from "src/@core/layouts/BlankLayout";
 import themeConfig from "src/configs/themeConfig";
 import { useAuth } from "src/hooks/useAuth";
 
+import CardContent from '@mui/material/CardContent'
 //----------
 //  Other Libraries imports
 //----------
@@ -42,6 +43,11 @@ import { toast } from "react-hot-toast";
 import * as yup from "yup";
 import axios from "axios";
 
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 //----------
 //  Styled components
 //----------
@@ -90,6 +96,7 @@ const LoginPage = () => {
   const [confirmEmail, setConfirmEmail] = useState(null)
   const [viewModal, setViewModal] = useState(false);
   const [termsConditions, setTermsConditions] = useState(null);
+  const [scroll, setScroll] = useState('paper')
 
    //----------
   //  Refs
@@ -501,7 +508,7 @@ const LoginPage = () => {
         <CircularProgress color="inherit" />
       </Backdrop> */}
 
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -517,7 +524,34 @@ const LoginPage = () => {
           </Typography>
           <Button sx={{float:'right'}} onClick={handleClose}>close</Button>
         </Card>
-      </Modal>
+      </Modal> */}
+
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          scroll={scroll}
+          aria-labelledby='scroll-dialog-title'
+          aria-describedby='scroll-dialog-description'
+        >
+          <DialogTitle id='scroll-dialog-title'>Terms & Conditions</DialogTitle>
+          <DialogContent dividers={scroll === 'paper'}>
+            <DialogContentText id='scroll-dialog-description' ref={descriptionElementRef} tabIndex={-1}>
+
+              <Card component='div' sx={{ position: 'relative', mb: 7 }}>
+                <CardContent>
+                    <Grid container>
+                      {termsConditions}
+                    </Grid>
+                </CardContent>
+              </Card>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
 
 
     </Box>

@@ -19,6 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Stack from '@mui/material/Stack';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { useTheme } from '@mui/material/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
@@ -32,6 +33,88 @@ import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import { toast } from 'react-hot-toast'
 import Pagination from '@mui/material/Pagination';
+
+// carousel related code
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    width: '100%',
+  },
+}));
+// carousel component.
+const Carousel = ({ images }) => {
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = useState(0);
+  const maxSteps = images.length;
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepChange = (step) => {
+    setActiveStep(step);
+  };
+  const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+  const theme = useTheme();
+
+  return (
+    <div className={classes.root}>
+      <AutoPlaySwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={activeStep}
+        onChangeIndex={handleStepChange}
+        enableMouseEvents
+      >
+        {images.map((step, index) => (
+          <div key={step}>
+            {Math.abs(activeStep - index) <= 2 ? (
+              <Box
+                component="img"
+                sx={{
+                  height: 100,
+                  display: 'block',
+                  maxWidth: 300,
+                  overflow: 'hidden',
+                  width: '100%',
+                  mr: 2
+                }}
+                src={step}
+                alt={step}
+              />
+            ) : null}
+          </div>
+        ))}
+      </AutoPlaySwipeableViews>
+      <MobileStepper
+        steps={maxSteps}
+        position="static"
+        activeStep={activeStep}
+        nextButton={
+          <Button
+            size="small"
+            onClick={handleNext}
+            disabled={activeStep === maxSteps - 1}
+          >
+            <KeyboardArrowRight />
+          </Button>
+        }
+        backButton={
+          <Button
+            size="small"
+            onClick={handleBack}
+            disabled={activeStep === 0}
+          >
+            <KeyboardArrowLeft />
+          </Button>
+        }
+      />
+    </div>
+  );
+};
 
 const OurVendor = () => {
   const [value, setValue] = useState(0)
@@ -113,6 +196,7 @@ const OurVendor = () => {
     }
     setValue(newValue)
     if(newValue == 0){
+      onPageChange(1, companies)
       setData(companies)
     }else{
       let filter = categories.filter(c=>c.catogory==newValue)
@@ -122,6 +206,7 @@ const OurVendor = () => {
           f.poc_userid == c.user_id && data.push(c)
         })
       })
+      onPageChange(1, data)
       setData(data)
     }
   }
@@ -168,8 +253,9 @@ const OurVendor = () => {
       });
     }
     
-
     if(value == 0){
+      console.log(filteredData)
+      onPageChange(1, filteredData)
       setCompanies(filteredData)
       setData(filteredData)
     }else{
@@ -180,6 +266,8 @@ const OurVendor = () => {
           f.poc_userid == c.user_id && data.push(c)
         })
       })
+      
+      onPageChange(1, data)
       setData(data)
     }
   }
@@ -233,65 +321,8 @@ const OurVendor = () => {
                     <Card component='div' sx={{ position: 'relative', mb: 7 }}>
                         <CardContent sx={{ display: 'flex' }}>
                           <Grid item xs={12} md={6}>
-                            {/* <Avatar
-                             alt={c.first_name}
-                              src={c.file[0]}
-                              sx={{ width: 56, height: 56 }}
-                            /> */}
                             <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
-                              <AutoPlaySwipeableViews
-                                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                index={activeStep}
-                                onChangeIndex={handleStepChange}
-                                enableMouseEvents
-                              >
-                                {c.file.map((step, index) => (
-                                  <div key={step}>
-                                    {Math.abs(activeStep - index) <= 2 ? (
-                                      <Box
-                                        component="img"
-                                        sx={{
-                                          height: 100,
-                                          display: 'block',
-                                          maxWidth: 300,
-                                          overflow: 'hidden',
-                                          width: '100%',
-                                          mr: 2
-                                        }}
-                                        src={step}
-                                        alt={step}
-                                      />
-                                    ) : null}
-                                  </div>
-                                ))}
-                              </AutoPlaySwipeableViews>
-                              <MobileStepper
-                                steps={c.file.length}
-                                position="static"
-                                activeStep={activeStep}
-                                nextButton={
-                                  <Button
-                                    size="small"
-                                    onClick={handleNext}
-                                    disabled={activeStep === c.file.length - 1}
-                                  >
-                                    {theme.direction === 'rtl' ? (
-                                      <KeyboardArrowLeft />
-                                    ) : (
-                                      <KeyboardArrowRight />
-                                    )}
-                                  </Button>
-                                }
-                                backButton={
-                                  <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                                    {theme.direction === 'rtl' ? (
-                                      <KeyboardArrowRight />
-                                    ) : (
-                                      <KeyboardArrowLeft />
-                                    )}
-                                  </Button>
-                                }
-                              />
+                              <Carousel images={c.file} />
                             </Box>
                           </Grid>
                           <Grid item xs={12} md={6}>
@@ -347,72 +378,15 @@ const OurVendor = () => {
                 <h4>{v.service_name} Vendors List</h4>
                 <Grid container spacing={2} className='match-height'>
                   {
-                    data.map(c=>{
+                    data.length == 0?<Typography variant='small'>No Vendor found!</Typography>:
+                    slicedData.map(c=>{
                     return (
                       <Grid item xs={12} md={4}>
                         <Card component='div' sx={{ position: 'relative', mb: 7 }}>
                             <CardContent sx={{ display: 'flex' }}>
                               <Grid item xs={12} md={6}>
-                                {/* <Avatar
-                                alt={c.first_name}
-                                  src={c.file[0]}
-                                  sx={{ width: 56, height: 56 }}
-                                /> */}
                                 <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
-                                  
-                                  <AutoPlaySwipeableViews
-                                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                    index={activeStep}
-                                    onChangeIndex={handleStepChange}
-                                    enableMouseEvents
-                                  >
-                                    {c.file.map((step, index) => (
-                                      <div key={step}>
-                                        {Math.abs(activeStep - index) <= 2 ? (
-                                          <Box
-                                            component="img"
-                                            sx={{
-                                              height: 100,
-                                              display: 'block',
-                                              maxWidth: 300,
-                                              overflow: 'hidden',
-                                              width: '100%',
-                                              mr: 2
-                                            }}
-                                            src={step}
-                                            alt={step}
-                                          />
-                                        ) : null}
-                                      </div>
-                                    ))}
-                                  </AutoPlaySwipeableViews>
-                                  <MobileStepper
-                                    steps={c.file.length}
-                                    position="static"
-                                    activeStep={activeStep}
-                                    nextButton={
-                                      <Button
-                                        size="small"
-                                        onClick={handleNext}
-                                        disabled={activeStep === c.file.length - 1}
-                                      >
-                                        {theme.direction === 'rtl' ? (
-                                          <KeyboardArrowLeft />
-                                        ) : (
-                                          <KeyboardArrowRight />
-                                        )}
-                                      </Button>
-                                    }
-                                    backButton={
-                                      <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                                        {theme.direction === 'rtl' ? (
-                                          <KeyboardArrowRight />
-                                        ) : (
-                                          <KeyboardArrowLeft />
-                                        )}
-                                      </Button>
-                                    }
-                                  />
+                                  <Carousel images={c.file} />
                                 </Box>
 
                               </Grid>
@@ -457,6 +431,11 @@ const OurVendor = () => {
                     )
                   })}
                 </Grid>
+                <Stack spacing={2} sx={{p:10}}>
+                <Pagination count={Math.ceil(data.length / recordsPerPage)}
+                  page={currentPage}
+                  onChange={handlePageChange}  color="secondary" />
+              </Stack>
               </TabPanel>
             )
           })}
