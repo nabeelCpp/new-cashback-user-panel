@@ -64,6 +64,7 @@ const AuthProvider = ({ children }) => {
           image: response.image,
           role: "ADMIN",
         };
+        const { returnUrl } = router.query;
         window.localStorage.setItem(
           authConfig.storageTokenKeyName,
           response.accessToken
@@ -71,8 +72,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("userData", JSON.stringify(user));
         localStorage.setItem("referral", response.username);
         cb({ success: true });
-        router.replace("/dashboard");
-        window.location.reload();
+        window.location.href = returnUrl||'/dashboard';
       })
       .catch((error) => {
         if (error.response) {
